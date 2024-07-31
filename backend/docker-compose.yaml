@@ -1,0 +1,47 @@
+volumes:
+  postgres-data:
+  pgadmin-data:
+
+services:
+  database:
+    container_name: postgres-fastapi
+    image: postgres:16
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_DB: ${PG_DB}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data/
+    ports:
+      - "5434:5432"
+
+  application:
+    container_name: backend-fastapi
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8000"
+    command: >
+      sh -c "
+        alembic upgrade head &&
+        uvicorn main:init_app --host 0.0.0.0 --port 8000 --log-config=log_conf.yaml"
+    depends_on:
+      - database
+
+  pgadmin:
+    container_name: pgadmin4-fastapi
+    image: dpage/pgadmin4:7
+    restart: always
+    env_file:
+      - .env
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
