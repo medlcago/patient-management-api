@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Optional, Sequence
+from typing import TYPE_CHECKING, Sequence
 
 from fastapi import HTTPException
 
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 
 class EmployeeServiceImpl(EmployeeService):
-    async def create(self, uow: "UnitOfWork", *, data: "SignUpRequest") -> Optional["Employee"]:
+    async def create(self, uow: "UnitOfWork", *, data: "SignUpRequest") -> "Employee":
         async with uow:
             if await uow.employee.filter(email=data.email):
                 raise HTTPException(
@@ -24,7 +24,7 @@ class EmployeeServiceImpl(EmployeeService):
             employee = await uow.employee.create(**data.model_dump())
             return employee
 
-    async def find_employee(self, uow: "UnitOfWork", **kwargs) -> Optional["Employee"]:
+    async def find_employee(self, uow: "UnitOfWork", **kwargs) -> "Employee":
         async with uow:
             employee = await uow.employee.filter(**kwargs)
             if not employee:
@@ -47,7 +47,7 @@ class EmployeeServiceImpl(EmployeeService):
             employees = await uow.employee.find_all(limit=limit, offset=offset, order_by=order_by, *options, **kwargs)
             return employees
 
-    async def update(self, uow: "UnitOfWork", *, employee_id: int, data: "EmployeeUpdate") -> Optional["Employee"]:
+    async def update(self, uow: "UnitOfWork", *, employee_id: int, data: "EmployeeUpdate") -> "Employee":
         async with uow:
             employee = await uow.employee.update(employee_id, **data.model_dump(exclude_none=True))
             if not employee:

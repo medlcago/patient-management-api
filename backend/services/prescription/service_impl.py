@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from fastapi import HTTPException
 from sqlalchemy.exc import IntegrityError
@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 class PrescriptionServiceImpl(PrescriptionService):
-    async def create(self, uow: "UnitOfWork", *, data: "PrescriptionCreateRequest") -> Optional["Prescription"]:
+    async def create(self, uow: "UnitOfWork", *, data: "PrescriptionCreateRequest") -> "Prescription":
         try:
             async with uow:
                 prescription = await uow.prescription.create(**data.model_dump())
@@ -23,7 +23,7 @@ class PrescriptionServiceImpl(PrescriptionService):
                 detail="Medical record not found"
             )
 
-    async def find_prescription(self, uow: "UnitOfWork", **kwargs) -> Optional["Prescription"]:
+    async def find_prescription(self, uow: "UnitOfWork", **kwargs) -> "Prescription":
         async with uow:
             prescription = await uow.prescription.filter(**kwargs)
             if not prescription:

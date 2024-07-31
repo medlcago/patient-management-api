@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from core.unitofwork import UnitOfWork
@@ -9,11 +9,11 @@ if TYPE_CHECKING:
 
 class PrescriptionService(ABC):
     @abstractmethod
-    async def create(self, uow: "UnitOfWork", *, data: "PrescriptionCreateRequest") -> Optional["Prescription"]:
+    async def create(self, uow: "UnitOfWork", *, data: "PrescriptionCreateRequest") -> "Prescription":
         pass
 
     @abstractmethod
-    async def find_prescription(self, uow: "UnitOfWork", **kwargs) -> Optional["Prescription"]:
+    async def find_prescription(self, uow: "UnitOfWork", **kwargs) -> "Prescription":
         pass
 
     @abstractmethod

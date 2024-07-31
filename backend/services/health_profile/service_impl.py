@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Optional, Sequence
+from typing import TYPE_CHECKING, Sequence
 
 from fastapi import HTTPException
 from sqlalchemy.exc import IntegrityError
@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 class HealthProfileServiceImpl(HealthProfileService):
-    async def create(self, uow: "UnitOfWork", *, data: "HealthProfileCreateRequest") -> Optional["HealthProfile"]:
+    async def create(self, uow: "UnitOfWork", *, data: "HealthProfileCreateRequest") -> "HealthProfile":
         try:
             async with uow:
                 if await uow.health_profile.filter(patient_id=data.patient_id):
@@ -41,7 +41,7 @@ class HealthProfileServiceImpl(HealthProfileService):
             health_profiles = await uow.health_profile.find_all(limit=limit, offset=offset, order_by=order_by, *options, **kwargs)
             return health_profiles
 
-    async def find_health_profile(self, uow: "UnitOfWork", **kwargs) -> Optional["HealthProfile"]:
+    async def find_health_profile(self, uow: "UnitOfWork", **kwargs) -> "HealthProfile":
         async with uow:
             health_profile = await uow.health_profile.filter(**kwargs)
             if not health_profile:

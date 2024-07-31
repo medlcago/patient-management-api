@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Sequence, Optional
+from typing import TYPE_CHECKING, Sequence
 
 from fastapi import HTTPException
 
@@ -17,7 +17,7 @@ class MedicalRecordServiceImpl(MedicalRecordService):
             *,
             employee_id: int,
             data: "MedicalRecordCreateRequest"
-    ) -> Optional["MedicalRecord"]:
+    ) -> "MedicalRecord":
         async with uow:
             if not await uow.patient.filter(id=data.patient_id):
                 raise HTTPException(
@@ -46,7 +46,7 @@ class MedicalRecordServiceImpl(MedicalRecordService):
             )
             return medical_records
 
-    async def find_medical_record(self, uow: "UnitOfWork", **kwargs) -> Optional["MedicalRecord"]:
+    async def find_medical_record(self, uow: "UnitOfWork", **kwargs) -> "MedicalRecord":
         async with uow:
             medical_record = await uow.medical_record.filter(**kwargs)
             if not medical_record:

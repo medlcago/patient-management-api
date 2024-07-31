@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Optional, Sequence
+from typing import TYPE_CHECKING, Sequence
 
 if TYPE_CHECKING:
     from dtos.health_profile import HealthProfileCreateRequest
@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 
 class HealthProfileService(ABC):
     @abstractmethod
-    async def create(self, uow: "UnitOfWork", *, data: "HealthProfileCreateRequest") -> Optional["HealthProfile"]:
+    async def create(self, uow: "UnitOfWork", *, data: "HealthProfileCreateRequest") -> "HealthProfile":
         pass
 
     @abstractmethod
@@ -24,5 +24,5 @@ class HealthProfileService(ABC):
         pass
 
     @abstractmethod
-    async def find_health_profile(self, uow: "UnitOfWork", **kwargs) -> Optional["HealthProfile"]:
+    async def find_health_profile(self, uow: "UnitOfWork", **kwargs) -> "HealthProfile":
         pass

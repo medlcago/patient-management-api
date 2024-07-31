@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from core.unitofwork import UnitOfWork
@@ -9,13 +9,13 @@ if TYPE_CHECKING:
 
 class AuthService(ABC):
     @abstractmethod
-    async def login(self, uow: "UnitOfWork", *, username: str, password: str) -> Optional["Token"]:
+    async def login(self, uow: "UnitOfWork", *, username: str, password: str) -> "Token":
         pass
 
     @abstractmethod
-    async def refresh_token(self, token: str) -> Optional["AccessToken"]:
+    async def refresh_token(self, token: str) -> "AccessToken":
         pass
 
     @abstractmethod
-    async def authenticate(self, uow: "UnitOfWork", *, username: str, password: str) -> Optional["Employee"]:
+    async def authenticate(self, uow: "UnitOfWork", *, username: str, password: str) -> "Employee":
         pass

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Optional, TYPE_CHECKING, Sequence
+from typing import TYPE_CHECKING, Sequence
 
 if TYPE_CHECKING:
     from dtos.employee import SignUpRequest, EmployeeUpdate
@@ -9,11 +9,11 @@ if TYPE_CHECKING:
 
 class EmployeeService(ABC):
     @abstractmethod
-    async def create(self, uow: "UnitOfWork", *, data: "SignUpRequest") -> Optional["Employee"]:
+    async def create(self, uow: "UnitOfWork", *, data: "SignUpRequest") -> "Employee":
         pass
 
     @abstractmethod
-    async def find_employee(self, uow: "UnitOfWork", **kwargs) -> Optional["Employee"]:
+    async def find_employee(self, uow: "UnitOfWork", **kwargs) -> "Employee":
         pass
 
     @abstractmethod
@@ -28,7 +28,7 @@ class EmployeeService(ABC):
         pass
 
     @abstractmethod
-    async def update(self, uow: "UnitOfWork", *, employee_id: int, data: "EmployeeUpdate") -> Optional["Employee"]:
+    async def update(self, uow: "UnitOfWork", *, employee_id: int, data: "EmployeeUpdate") -> "Employee":
         pass
 
     @abstractmethod

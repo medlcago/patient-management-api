@@ -26,7 +26,7 @@ class AuthServiceImpl(AuthService):
             refresh_token=refresh
         )
 
-    async def refresh_token(self, token: str) -> Optional[AccessToken]:
+    async def refresh_token(self, token: str) -> AccessToken:
         exp401 = HTTPException(
             status_code=401,
             detail="Invalid token"

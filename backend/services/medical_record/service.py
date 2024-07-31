@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Optional, Sequence
+from typing import TYPE_CHECKING, Sequence
 
 if TYPE_CHECKING:
     from core.unitofwork import UnitOfWork
@@ -15,7 +15,7 @@ class MedicalRecordService(ABC):
             *,
             employee_id: int,
             data: "MedicalRecordCreateRequest"
-    ) -> Optional["MedicalRecord"]:
+    ) -> "MedicalRecord":
         pass
 
     @abstractmethod
@@ -30,5 +30,5 @@ class MedicalRecordService(ABC):
         pass
 
     @abstractmethod
-    async def find_medical_record(self, uow: "UnitOfWork", **kwargs) -> Optional["MedicalRecord"]:
+    async def find_medical_record(self, uow: "UnitOfWork", **kwargs) -> "MedicalRecord":
         pass

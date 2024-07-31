@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Sequence, Optional
+from typing import TYPE_CHECKING, Sequence
 
 if TYPE_CHECKING:
     from dtos.patient import PatientCreateRequest
@@ -26,9 +26,9 @@ class PatientService(ABC):
         pass
 
     @abstractmethod
-    async def find_patient(self, uow: "UnitOfWork", **kwargs) -> Optional["Patient"]:
+    async def find_patient(self, uow: "UnitOfWork", **kwargs) -> "Patient":
         pass
 
     @abstractmethod
-    async def update(self, uow: "UnitOfWork", *, patient_id: int, data: "PatientUpdate") -> Optional["Patient"]:
+    async def update(self, uow: "UnitOfWork", *, patient_id: int, data: "PatientUpdate") -> "Patient":
         pass

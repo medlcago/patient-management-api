@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Optional, Sequence
+from typing import TYPE_CHECKING, Sequence
 
 from fastapi import HTTPException
 
@@ -29,7 +29,7 @@ class PatientServiceImpl(PatientService):
             patients = await uow.patient.find_all(limit=limit, offset=offset, order_by=order_by, *options, **kwargs)
             return patients
 
-    async def find_patient(self, uow: "UnitOfWork", **kwargs) -> Optional["Patient"]:
+    async def find_patient(self, uow: "UnitOfWork", **kwargs) -> "Patient":
         async with uow:
             patient = await uow.patient.filter(**kwargs)
             if not patient:
@@ -39,7 +39,7 @@ class PatientServiceImpl(PatientService):
                 )
             return patient
 
-    async def update(self, uow: "UnitOfWork", *, patient_id: int, data: "PatientUpdate") -> Optional["Patient"]:
+    async def update(self, uow: "UnitOfWork", *, patient_id: int, data: "PatientUpdate") -> "Patient":
         async with uow:
             patient = await uow.patient.update(patient_id, **data.model_dump(exclude_none=True))
             if not patient:
