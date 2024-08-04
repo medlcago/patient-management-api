@@ -18,7 +18,8 @@ class PatientServiceImpl(PatientService):
             return patient
 
     async def find_all(
-            self, uow: "UnitOfWork",
+            self,
+            uow: "UnitOfWork",
             *options,
             limit: int,
             offset: int,

@@ -14,7 +14,7 @@ class SQLAlchemyRepository[T]:
     model: type[T] = None
     pagination_class: type["Pagination"] = LimitOffsetPagination
 
-    def __init__(self, session: AsyncSession):
+    def __init__(self, session: AsyncSession) -> None:
         self.session = session
 
     async def count(self, **kwargs) -> int:
@@ -43,9 +43,14 @@ class SQLAlchemyRepository[T]:
             *options,
             **filters).get_response()
 
-    async def filter(self, **kwargs) -> Optional[T]:
+    async def filter(self, many: bool = False, **kwargs) -> Optional[T] | Sequence[T]:
         stmt = select(self.model).filter_by(**kwargs)
+        if many:
+            return await self.session.scalars(stmt)
         return await self.session.scalar(stmt)
+
+    async def find_by_id(self, _id: int) -> Optional[T]:
+        return await self.session.get(self.model, _id)
 
     async def find_one(self, _id: int) -> Optional[T]:
         return await self.session.get(self.model, _id)
