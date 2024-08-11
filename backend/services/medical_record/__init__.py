@@ -1,5 +1,7 @@
-from .service_impl import medical_record_service
+from .interface import MedicalRecordServiceInterface
+from .service import MedicalRecordService
 
 __all__ = (
-    "medical_record_service",
+    "MedicalRecordServiceInterface",
+    "MedicalRecordService",
 )

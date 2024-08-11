@@ -49,9 +49,6 @@ class SQLAlchemyRepository[T]:
             return await self.session.scalars(stmt)
         return await self.session.scalar(stmt)
 
-    async def find_by_id(self, _id: int) -> Optional[T]:
-        return await self.session.get(self.model, _id)
-
     async def find_one(self, _id: int) -> Optional[T]:
         return await self.session.get(self.model, _id)
 

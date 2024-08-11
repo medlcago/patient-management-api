@@ -1,5 +1,7 @@
-from .service_impl import health_profile_service
+from .interface import HealthProfileServiceInterface
+from .service import HealthProfileService
 
 __all__ = (
-    "health_profile_service",
+    "HealthProfileServiceInterface",
+    "HealthProfileService",
 )

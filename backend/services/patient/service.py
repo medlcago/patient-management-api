@@ -1,5 +1,8 @@
-from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Sequence
+
+from fastapi import HTTPException
+
+from services.patient.interface import PatientServiceInterface
 
 if TYPE_CHECKING:
     from dtos.patient import PatientCreateRequest
@@ -8,27 +11,49 @@ if TYPE_CHECKING:
     from models import Patient
 
 
-class PatientService(ABC):
-    @abstractmethod
-    async def create(self, uow: "UnitOfWork", *, data: "PatientCreateRequest") -> "Patient":
-        pass
+class PatientService(PatientServiceInterface):
+    def __init__(self, uow: "UnitOfWork"):
+        self.uow = uow
 
-    @abstractmethod
+    async def create(self, *, data: "PatientCreateRequest") -> "Patient":
+        async with self.uow:
+            patient = await self.uow.patient.create(**data.model_dump())
+            return patient
+
     async def find_all(
             self,
-            uow: "UnitOfWork",
             *options,
             limit: int,
             offset: int,
             order_by: tuple[str, bool] | None = None,
             **kwargs
     ) -> dict[str, int | Sequence["Patient"]]:
-        pass
+        async with self.uow:
+            patients = await self.uow.patient.find_all(
+                limit=limit,
+                offset=offset,
+                order_by=order_by,
+                *options,
+                **kwargs
+            )
+            return patients
 
-    @abstractmethod
-    async def find_patient(self, uow: "UnitOfWork", **kwargs) -> "Patient":
-        pass
+    async def find_patient(self, **kwargs) -> "Patient":
+        async with self.uow:
+            patient = await self.uow.patient.filter(**kwargs)
+            if not patient:
+                raise HTTPException(
+                    status_code=404,
+                    detail=f"Patient not found"
+                )
+            return patient
 
-    @abstractmethod
-    async def update(self, uow: "UnitOfWork", *, patient_id: int, data: "PatientUpdate") -> "Patient":
-        pass
+    async def update(self, *, patient_id: int, data: "PatientUpdate") -> "Patient":
+        async with self.uow:
+            patient = await self.uow.patient.update(patient_id, **data.model_dump(exclude_none=True))
+            if not patient:
+                raise HTTPException(
+                    status_code=404,
+                    detail=f"Patient not found"
+                )
+            return patient

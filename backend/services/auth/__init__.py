@@ -1,5 +1,7 @@
-from .service_impl import auth_service
+from .interface import AuthServiceInterface
+from .service import AuthService
 
 __all__ = (
-    "auth_service",
+    "AuthServiceInterface",
+    "AuthService",
 )

@@ -1,5 +1,7 @@
-from .service_impl import prescription_service
+from .interface import PrescriptionServiceInterface
+from .service import PrescriptionService
 
 __all__ = (
-    "prescription_service",
+    "PrescriptionServiceInterface",
+    "PrescriptionService",
 )

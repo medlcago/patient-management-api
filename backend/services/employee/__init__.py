@@ -1,5 +1,7 @@
-from .service_impl import employee_service
+from .interface import EmployeeServiceInterface
+from .service import EmployeeService
 
 __all__ = (
-    "employee_service",
+    "EmployeeServiceInterface",
+    "EmployeeService",
 )

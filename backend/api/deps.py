@@ -7,7 +7,7 @@ from core.security import decode_token
 from core.unitofwork import UnitOfWork
 from enums.employee import EmployeeRole
 from models import Employee
-from services import employee_service
+from services import Service
 
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl=f"api/v1/auth/token"
@@ -15,10 +15,12 @@ oauth2_scheme = OAuth2PasswordBearer(
 
 UOWDep = Annotated[UnitOfWork, Depends()]
 
+ServiceDep = Annotated[Service, Depends(Service(uow=UnitOfWork()))]
+
 TokenDep = Annotated[str, Depends(oauth2_scheme)]
 
 
-async def current_employee(uow: UOWDep, token: TokenDep) -> Employee:
+async def current_employee(service: ServiceDep, token: TokenDep) -> Employee:
     exp401 = HTTPException(
         status_code=401,
         detail="Invalid token",
@@ -32,7 +34,7 @@ async def current_employee(uow: UOWDep, token: TokenDep) -> Employee:
     if token_type != "access":
         raise exp401
     employee_id = payload.get("employee_id")
-    employee = await employee_service.find_employee(uow, id=employee_id)
+    employee = await service.employee_service.find_employee(id=employee_id)
     if not employee:
         raise exp401
     return employee
